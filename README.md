@@ -30,11 +30,11 @@ Demonstrated in the example, we can see how each component communicates. The int
 MapReduce is a methodology that has gained a lot of traction recently. Using JavaScript a straight forward explanation would be to utilize the ``map()`` and ``reduce()`` function on a dataset. First you map your data, to provide a minimal dataset needed by your reduce. The reduce (as the name implies) reduces the data to the wanted result.
  ![](mapReduceExample.png)
 
-##### Import the twitter data provided and utilize the mapreduce function to query the 10 most used languages in posts based on their authors nationality.
+##### Import the twitter data provided and utilize the mapreduce function to query the 10 most used languages in posts.
 ```js
  db.tweets.mapReduce(
     function() {
-        emit(this.user.lang, 1);
+        emit(this.lang, 1);
     },
     function(id, language) {
         return Array.sum(language)
@@ -47,25 +47,61 @@ Result:
 /* 1 */
 {
     "_id" : "en",
-    "value" : 796.0
+    "value" : 702.0
 }
 
 /* 2 */
 {
     "_id" : "tr",
-    "value" : 158.0
+    "value" : 166.0
 }
 
 /* 3 */
 {
     "_id" : "es",
-    "value" : 8.0
+    "value" : 21.0
 }
 
 /* 4 */
 {
     "_id" : "fr",
+    "value" : 19.0
+}
+
+/* 5 */
+{
+    "_id" : "und",
+    "value" : 10.0
+}
+
+/* 6 */
+{
+    "_id" : "in",
+    "value" : 9.0
+}
+
+/* 7 */
+{
+    "_id" : "pt",
+    "value" : 7.0
+}
+
+/* 8 */
+{
+    "_id" : "ht",
+    "value" : 6.0
+}
+
+/* 9 */
+{
+    "_id" : "ro",
     "value" : 4.0
+}
+
+/* 10 */
+{
+    "_id" : "de",
+    "value" : 3.0
 }
 ```
 ##### Also by using mapreduce, query the 10 most used hashtags, based on posts text content.
