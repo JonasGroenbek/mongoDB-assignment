@@ -105,14 +105,17 @@ Result:
 }
 ```
 ##### Also by using mapreduce, query the 10 most used hashtags, based on posts text content.
+
+To be honest, this is obviously not an optimal implementation. The regular expression matches the spaces leading up to a hashtag and I have difficulties troubleshooting why the ``\n`` is matched.
+
 ```js
 db.tweets.mapReduce(
     function() {
         var foundMatches = /(^|\s)(#[a-z\d-]+)/.exec(this.text)
         if(foundMatches !== null){
-            foundMatches.forEach(regex => {
-                if(regex && regex !== " "){
-                    emit(regex, 1)   
+            foundMatches.forEach(hashtag => {
+                if(hashtag.charAt(0) !== ' ' && hashtag !== "\n"){
+                    emit(hashtag, 1)   
                 }
             })
         }
@@ -121,69 +124,69 @@ db.tweets.mapReduce(
         return Array.sum(count)
      },
      
-    { out: "most used hashtags" }
+    { out: "most used regular expressions" }
 ).find().limit(10).sort({value: -1})
 ``` 
 Result: 
 ```json
 /* 1 */
 {
-    "_id" : " #webinar",
+    "_id" : "#webinar",
     "value" : 12.0
 }
 
 /* 2 */
 {
-    "_id" : "#webinar",
-    "value" : 12.0
-}
-
-/* 3 */
-{
-    "_id" : " #javascript",
-    "value" : 10.0
-}
-
-/* 4 */
-{
-    "_id" : " #job",
-    "value" : 10.0
-}
-
-/* 5 */
-{
     "_id" : "#javascript",
     "value" : 10.0
 }
 
-/* 6 */
+/* 3 */
 {
     "_id" : "#job",
     "value" : 10.0
 }
 
-/* 7 */
-{
-    "_id" : " #php",
-    "value" : 8.0
-}
-
-/* 8 */
-{
-    "_id" : " #sales",
-    "value" : 8.0
-}
-
-/* 9 */
+/* 4 */
 {
     "_id" : "#php",
     "value" : 8.0
 }
 
-/* 10 */
+/* 5 */
 {
     "_id" : "#sales",
     "value" : 8.0
+}
+
+/* 6 */
+{
+    "_id" : "#nodejs",
+    "value" : 7.0
+}
+
+/* 7 */
+{
+    "_id" : "#devfestizmir",
+    "value" : 4.0
+}
+
+/* 8 */
+{
+    "_id" : "#globalmoms",
+    "value" : 4.0
+}
+
+/* 9 */
+{
+    "_id" : "#jobs",
+    "value" : 4.0
+}
+
+/* 10 */
+{
+    "_id" : "#angularjs",
+    "value" : 3.0
 }
 ``` 
 # MongoDB-assignment
